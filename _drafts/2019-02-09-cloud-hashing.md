@@ -200,7 +200,7 @@ Using a .hcmask file allows the user more flexibility than the standard hashcat 
 {% highlight bash %}
 ?1?1?1?1?1?1
 ?1?1?1?1?1?1?1
-{% highlight bash %}
+{% endhighlight %}
   
 To use the mask file, place it on the line where you'd usually put the mask. 
 {% highlight bash %}
