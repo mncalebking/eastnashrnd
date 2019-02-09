@@ -95,11 +95,13 @@ Then update the package manager and install cuda:
 {% endhighlight %}
   
 Once completed, reboot the server.
+
 {% highlight bash %}
 	sudo reboot
 {% endhighlight %}
   
 Reconnect to the instance and verify that the drivers have been successfully installed:
+
 {% highlight bash %}
 	hashcat -I
 { % endhighlight %}
@@ -195,9 +197,11 @@ You should see something like this:
 {% endhighlight %}
   
 ## Create an MD5 hash of input text
+
 {% highlight bash %}
 	echo -n "test" | md5sum | tr -d " -" > hash
 {% endhighlight %}
+
 Outputs to a file called "hash"
 
 ## Hashcat Masks
@@ -213,24 +217,29 @@ Lets say, for example, that the password we want to crack uses the following rul
 {% endhighlight %}
   
 This character set includes uppercase letters, lowercase letters, and digits.
+
 {% highlight bash %}
 hashcat -a 3 -1 ?u?l?d hash ?1?1?1?1?1?1?1?1?1?1?1?1
 {% endhighlight %}
+
 Using this command, it'll take about 602275007914781 days or 1650068514835 years to hash every possible combination. Obviously this isn't going to work. Instead we'll just hash up to 7 characters. If the target password is longer than this, we'll have to resort to dictionary-based attacks. 
   
 {% highlight bash %}
 hashcat -a 3 -1 ?u?l?d hash ?1?1?1?1?1?1?1
 {% endhighlight %}
+
 This command will only work for 7 character passwords. If we use the --increment option, hashcat will hash all possible combinations between 1-7 characters. Hashing passwords under 6 characters is completely pointless, so you may want to use a mask file.
 
 ### Mask Files
 Using a .hcmask file allows the user more flexibility than the standard hashcat options. For example, if we want to try all possible 6-7 character combinations, we can use a mask file like this:
+
 {% highlight bash %}
 ?1?1?1?1?1?1
 ?1?1?1?1?1?1?1
 {% endhighlight %}
   
 To use the mask file, place it on the line where you'd usually put the mask. 
+
 {% highlight bash %}
 hashcat -a 3 -1 ?u?l?d file.hash example.hcmask
 {% endhighlight %}
