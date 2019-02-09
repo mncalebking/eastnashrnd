@@ -1,7 +1,5 @@
 ---
-published: false
----
----
+published: true
 layout: post
 title:  "High-speed Password Hashing with Google Cloud and Hashcat"
 author: caleb
