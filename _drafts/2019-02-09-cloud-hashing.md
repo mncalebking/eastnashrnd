@@ -11,6 +11,10 @@ image: assets/images/6.jpg
 
 # Hashing passwords with Google Cloud and Hashcat
 
+1. Create an accunt with Google Cloud Services.
+
+2. Enable billing. 
+
 3. Under quotas, select GPUs (all regions) and NVIDIA P100 GPUs for whichever region you plan on using. I chose us-west1. Then click "Edit Quotas." Enter your information, then enter a new quota limit of 1-4. You will also need to enter your reason for requesting a higher quota. The quota request process usually takes around 24 hours. 
 
 At the time of writing this guide, a VM with 4 Nvidia Tesla GPU's costs about $4/hour. 
@@ -27,9 +31,13 @@ No service account.
 5. Connect via SSH. 
 
 First we'll be updating the software on the server. 
+{% highlight bash %}
 	sudo apt-get update && sudo apt-get upgrade
+{% endhighlight %}
 Next we'll install hashcat and gdebi
+{% highlight bash %}
 	sudo apt-get install hashcat gdebi
+{% endhighlight %}
 Enter Y if prompted
 
 6. Drivers
@@ -43,10 +51,13 @@ CUDA Toolkit: 10.0
 Press search, then download. Then copy link address on the "Agree and Download" button. 
 
 Replace <link> with the link copied from the nvidia site. 
-	wget <link>
+{% highlight bash %}
+wget <link>
+{% endhighlight %}
 
 Example:
-	wget http://us.download.nvidia.com/tesla/410.79/nvidia-diag-driver-local-repo-ubuntu1804-410.79_1.0-1_amd64.deb
+{% highlight bash %}
+me@research-1:~$ wget http://us.download.nvidia.com/tesla/410.79/nvidia-diag-driver-local-repo-ubuntu1804-410.79_1.0-1_amd64.deb
 --2019-02-07 14:36:58--  http://us.download.nvidia.com/tesla/410.79/nvidia-diag-driver-local-repo-ubuntu1804-410.79_1.0-1_amd64.deb
 Resolving us.download.nvidia.com (us.download.nvidia.com)... 192.229.211.70, 2606:2800:21f:3aa:dcf:37b:1ed6:1fb
 Connecting to us.download.nvidia.com (us.download.nvidia.com)|192.229.211.70|:80... connected.
@@ -57,7 +68,10 @@ Saving to: ‘nvidia-diag-driver-local-repo-ubuntu1804-410.79_1.0-1_amd64.deb’
 nvidia-diag-driver-loca 100%[============================>]  92.56M   338MB/s    in 0.3s    
 
 2019-02-07 14:36:58 (338 MB/s) - ‘nvidia-diag-driver-local-repo-ubuntu1804-410.79_1.0-1_amd64.deb’ saved [97061646/97061646]
+{% endhighlight %}
 
+Install Cuda:
+{% highlight bash %}
 me@research-1:~$ sudo gdebi cuda-repo-ubuntu1804-10-0-local-10.0.130-410.48_1.0-1_amd64
 Reading package lists... Done
 Building dependency tree        
@@ -68,24 +82,33 @@ cuda repository configuration files
  Contains repository configuration for cuda.
  Contains a local repository for cuda.
 Do you want to install the software package? [y/N]:y
+{% endhighlight %}
 
 Add the repo key:
-	sudo apt-key add <path to key>.pub
-	
+{% highlight bash %}
+sudo apt-key add <path to key>.pub
+{% endhighlight %}
+  
 Repeat the process for the nvidia-diag-driver-local-repo-ubuntu1804-410.79_1.0-1_amd64.deb file
 
-Then update the package manager and install cuda
+Then update the package manager and install cuda:
+{% highlight bash %}
 	sudo apt-get update && sudo apt-get install cuda
-	
+{% endhighlight %}
+  
 Once completed, reboot the server.
+{% highlight bash %}
 	sudo reboot
-
+{% endhighlight %}
+  
 Reconnect to the instance and verify that the drivers have been successfully installed:
-
+{% highlight bash %}
 	hashcat -I
+{ % endhighlight %}
 
 You should see something like this:
 
+{% highlight bash %}
 	me@research-1:~$ hashcat -I
 	hashcat (v4.0.1) starting...
 
@@ -171,9 +194,12 @@ You should see something like this:
 		Memory         : 4070/16280 MB allocatable
 		OpenCL Version : OpenCL C 1.2 
 		Driver Version : 410.79
-
+{% endhighlight %}
+  
 ## Create an MD5 hash of input text
+{% highlight bash %}
 	echo -n "test" | md5sum | tr -d " -" > hash
+{% endhighlight %}
 Outputs to a file called "hash"
 
 ## Hashcat Masks
@@ -184,10 +210,14 @@ Lets say, for example, that the password we want to crack uses the following rul
   * Uppercase and lowercase letters
   * Numbers 0-9
 
+{% highlight bash %}
 	-1 ?u?l?d	
+{% endhighlight %}
+  
 This character set includes uppercase letters, lowercase letters, and digits.
-	
-	hashcat -a 3 -1 ?u?l?d hash ?1?1?1?1?1?1?1?1?1?1?1?1
+{% highlight bash %}
+hashcat -a 3 -1 ?u?l?d hash ?1?1?1?1?1?1?1?1?1?1?1?1
+{% endhighlight %}
 Using this command, it'll take about 602275007914781 days or 1650068514835 years to hash every possible combination. Obviously this isn't going to work. Instead we'll just hash up to 7 characters. If the target password is longer than this, we'll have to resort to dictionary-based attacks. 
   
 {% highlight bash %}
