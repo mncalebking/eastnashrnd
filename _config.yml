@@ -1,7 +1,7 @@
 # Site
-name: William Harper
-description: Research and Development
-meta_description: "Will Harper R&D."
+name: Caleb King
+description: Research and Development in East Nashville
+meta_description: "Caleb King R&D."
 logo: 'assets/images/logo.png'
 favicon: 'assets/images/favicon.ico'
 paginate: 12
@@ -13,14 +13,6 @@ baseurl:
 
 # Authors
 authors:
-  will:
-    name: Will
-    display_name: Will
-    gravatar: 
-    email:
-    web: 
-    twitter: 
-    description: ""
   caleb:
     name: Caleb
     display_name: Caleb
@@ -29,6 +21,14 @@ authors:
     web: 
     twitter: 
     description: "Research and Development Technician"
+  will:
+    name: Will
+    display_name: Will
+    gravatar: 
+    email:
+    web: 
+    twitter: 
+    description: ""
 
 # Plugins
 plugins: 
